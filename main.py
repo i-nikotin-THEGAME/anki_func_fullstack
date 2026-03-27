@@ -35,7 +35,8 @@ def load_words(filename="words.txt"):
                     if len(parts) == 2:
                         word = parts[0].strip()
                         translation = parts[1].strip()
-                        words[word] = translation
+                        if word and translation:
+                            words[word] = translation
         return words
     except FileNotFoundError:
         print(f"Ошибка: файл '{filename}' не найден")
@@ -66,9 +67,7 @@ def print_statistics(score, total_time):
             f"(среднее время: {average_time:.2f} сек.)"
         )
     else:
-        print(
-            f"Время игры: {total_time:.2f} секунд (среднее время: —)"
-        )
+        print(f"Время игры: {total_time:.2f} секунд (среднее время: —)")
 
 
 def ask_and_check(word, correct):
@@ -133,7 +132,6 @@ def start_game(words):
 
     score = 0
     total_time = 0
-    game_start_time = time.time()
 
     while True:
         word = random.choice(list(words.keys()))
@@ -145,6 +143,8 @@ def start_game(words):
         if need_exit:
             break
 
+        total_time += answer_time
+
         if is_correct:
             print(f"Верно! Время на ответ: {answer_time:.2f} секунд")
             score += 1
@@ -153,10 +153,6 @@ def start_game(words):
                 f"Неправильно, правильный ответ: {correct_translation}"
                 f" (Время на ответ: {answer_time:.2f} секунд)"
             )
-
-        total_time += answer_time
-
-    total_time = time.time() - game_start_time
     print("Спасибо за игру!")
     print_statistics(score, total_time)
 
@@ -189,7 +185,6 @@ def train_until_mistake(words):
     words_list = list(words.keys())
     score = 0
     total_time = 0
-    game_start_time = time.time()
 
     while True:
         word = random.choice(words_list)
@@ -197,6 +192,8 @@ def train_until_mistake(words):
 
         need_exit, is_correct, answer_time = ask_and_check(
             word, correct_translation)
+
+        total_time += answer_time
 
         if need_exit:
             print("Выход из режима по запросу пользователя.\n")
@@ -207,13 +204,9 @@ def train_until_mistake(words):
             print(
                 f"Верно! Всего очков: {score}"
                 f" (ответ за {answer_time:.2f} секунд)\n")
-            total_time += answer_time
         else:
             print(f"Ошибка! Неверно. Правильный ответ: {correct_translation}")
-            total_time += answer_time
             break
-
-    total_time = time.time() - game_start_time
     print()
     print_statistics(score, total_time)
 
@@ -308,7 +301,7 @@ def main():
         5. Выход (сохранение и завершение)
     """
     words = load_words()
-    print(f"Загруженные слова: {len(words)}\n")
+    print(f"Было загружено {len(words)} слов из файла words.txt\n")
 
     while True:
         menu = """Меню:
