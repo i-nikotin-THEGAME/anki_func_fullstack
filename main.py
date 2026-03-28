@@ -30,13 +30,12 @@ def load_words(filename="words.txt"):
         with open(filename, "r", encoding="utf-8") as file:
             for line in file:
                 line = line.strip()
-                if "," in line:
-                    parts = line.split(",", 1)
-                    if len(parts) == 2:
-                        word = parts[0].strip()
-                        translation = parts[1].strip()
-                        if word and translation:
-                            words[word] = translation
+                parts = line.split(",")
+                if len(parts) == 2:
+                    word = parts[0].strip()
+                    translation = parts[1].strip()
+                    if word and translation:
+                        words[word] = translation
         return words
     except FileNotFoundError:
         print(f"Ошибка: файл '{filename}' не найден")
@@ -59,7 +58,7 @@ def print_statistics(score, total_time):
         Ваш итоговый счёт: 2
         Время игры: 19.85 секунд (среднее время: 9.92 сек.)
     """
-    print(f"Ваш итоговый счёт: {score}")
+    print(f"Ваш итоговый счет: {score}")
     if score > 0:
         average_time = total_time / score
         print(
